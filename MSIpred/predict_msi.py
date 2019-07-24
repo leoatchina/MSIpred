@@ -23,8 +23,8 @@ def msi_prediction(feature_table, svm_model=None):
     '''
     feature_table = feature_table.fillna(0)
     if svm_model is None:
-        current_path = os.path.dirname(__file__)
-        model_path = os.path.join(current_path, 'best_svm_pipeline.pkl')
+        current_path  = os.path.dirname(__file__)
+        model_path    = os.path.join(current_path, 'best_svm_pipeline.pkl')
         best_pipeline = joblib.load(model_path)
     else:
         best_pipeline = svm_model
