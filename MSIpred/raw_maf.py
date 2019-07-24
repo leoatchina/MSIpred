@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
-MSIpre.raw_maf
-~~~~~~~~~~~~~~
-
 This module provides the class: 'MSIpre.raw_maf.Raw_Maf'
 class for adding 'In_repeats' info to each annotation term
 of a .maf(mutation annotation format) file.
@@ -85,12 +82,12 @@ class Raw_Maf(object):
         ]
 
         try:
-            ref_repeats = pd.read_table(ref_repeats_file, names=column_list)
+            ref_repeats = pd.read_csv(ref_repeats_file, names=column_list, sep='\t')
             ref_repeats = ref_repeats[(ref_repeats['chrom'].isin(candidate_chrom)) & (ref_repeats['period_size'] <= 5)][['chrom', 'chromStart', 'chromEnd']]
             # read in maf file by chunks
             chunksize = 10000
             chunks = []
-            maf_table_reader = pd.read_table(maf_file, low_memory=False, comment='#', chunksize = chunksize)
+            maf_table_reader = pd.read_csv(maf_file, low_memory=False, comment='#', chunksize = chunksize, sep='\t')
             for chunk in maf_table_reader:
                 chunks.append(chunk)
             maf_table = pd.concat(chunks, axis=0)
