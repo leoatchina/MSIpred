@@ -9,7 +9,7 @@ class for creating feature table used for Microsatellite
 Instability classification.
 '''
 
-from pandas import read_table
+from pandas import read_csv
 from pandas import concat
 from pandas import DataFrame as df
 import pandas as pd
@@ -29,7 +29,7 @@ def reduce_maf_df(tagged_maf_file):
         'Tumor_Seq_Allele2', 'Tumor_Sample_Barcode', 'Matched_Norm_Sample_Barcode',
         'TRANSCRIPT_STRAND', 'In_repeats'
     ]
-    maf_reader = read_table(tagged_maf_file, low_memory = False, comment='#', chunksize=chunksize, usecols = used_col)
+    maf_reader = read_csv(tagged_maf_file, low_memory = False, comment='#', chunksize=chunksize, usecols = used_col, sep = "\t")
     for chunk in maf_reader:
         chunks.append(chunk)
     reduced_maf_df = concat(chunks, axis=0)
