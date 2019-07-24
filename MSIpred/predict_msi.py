@@ -10,7 +10,9 @@ features generated from a .maf file.
 from sklearn.externals import joblib
 from pandas import DataFrame
 import os
-def msi_prediction(feature_table,svm_model=None):
+
+
+def msi_prediction(feature_table, svm_model=None):
     '''
     Input:
     feature_table : a pandas dataframe created by Tagged_Maf.make_feature_table
@@ -20,13 +22,13 @@ def msi_prediction(feature_table,svm_model=None):
     a dataframe with MSI status for each tumor.
     '''
     feature_table = feature_table.fillna(0)
-    if svm_model==None:
+    if svm_model is None:
         current_path = os.path.dirname(__file__)
-        model_path = os.path.join(current_path,'best_svm_pipeline.pkl')
+        model_path = os.path.join(current_path, 'best_svm_pipeline.pkl')
         best_pipeline = joblib.load(model_path)
     else:
-        best_pipeline=svm_model
+        best_pipeline = svm_model
 
-    predicted_msi =best_pipeline.predict(feature_table)
+    predicted_msi = best_pipeline.predict(feature_table)
     predicted_msi = ['MSS' if result == 0 else 'MSI-H' for result in predicted_msi]
-    return DataFrame(zip(feature_table.index,predicted_msi),columns=['Tumor','Predicted_MSI_Status'])
+    return DataFrame(zip(feature_table.index, predicted_msi), columns=['Tumor', 'Predicted_MSI_Status'])
