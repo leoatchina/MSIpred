@@ -69,21 +69,22 @@ class Raw_Maf(object):
         '''
         maf_file = self.maf_path
         # File read and DataFrame creation
-        column_list = [
-            "bin", "chrom", "chromStart", "chromEnd", "name_tag",
-            "period_size", "copyNUM", "consensusSize", "perMatch",
-            "perIndel", "score", "A", "C", "G", "T", "entropy", "unit_sequence"
-        ]
-        candidate_chrom = [
+        candidate_chrome = [
             'chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8',
             'chr9', 'chr10', 'chr11', 'chr12', 'chr13', 'chr14', 'chr15',
             'chr16', 'chr17', 'chr18', 'chr19', 'chr20', 'chr21', 'chr22',
             'chrX', 'chrY'
         ]
 
+        repeat_column_names = [   # 17 columns
+            "bin", "chrom", "chromStart", "chromEnd", "name_tag",
+            "period_size", "copyNUM", "consensusSize", "perMatch",
+            "perIndel", "score", "A", "C", "G", "T", "entropy", "unit_sequence"
+        ]
+
         try:
-            ref_repeats = pd.read_csv(ref_repeats_file, names=column_list, sep='\t')
-            ref_repeats = ref_repeats[(ref_repeats['chrom'].isin(candidate_chrom)) & (ref_repeats['period_size'] <= 5)][['chrom', 'chromStart', 'chromEnd']]
+            ref_repeats = pd.read_csv(ref_repeats_file, names=repeat_column_names, sep='\t')
+            ref_repeats = ref_repeats[(ref_repeats['chrom'].isin(candidate_chrome)) & (ref_repeats['period_size'] <= 5)][['chrom', 'chromStart', 'chromEnd']]
             # read in maf file by chunks
             chunksize = 10000
             chunks = []
@@ -99,5 +100,5 @@ class Raw_Maf(object):
             if not tagged_maf_file:
                 return annotated_maf
             else:
-                file_path = tagged_maf_file['tagged_maf_file']
+                file_path = tagged_maf_file['tagged_maf_file']  # NOTE: 这种写法学习下
                 annotated_maf.to_csv(file_path.strip(), sep ='\t', index=False)
