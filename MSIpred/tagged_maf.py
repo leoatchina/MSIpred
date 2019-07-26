@@ -13,6 +13,7 @@ from pandas import read_csv
 from pandas import concat
 from pandas import DataFrame as df
 import pandas as pd
+import numpy as np
 
 
 def reduce_maf_df(tagged_maf_file):
@@ -156,9 +157,11 @@ class Tagged_Maf(object):
         vt_feature['t_mutation'] = vt_feature['SNP']+vt_feature['INDEL']
         vt_feature['INDEL_R'] = vt_feature['INS_R']+vt_feature['DEL_R']
         vt_feature['t_mutation_R'] = vt_feature['SNP_R']+vt_feature['INDEL_R']
+
         vt_feature['SNP_R/SNP'] = vt_feature['SNP_R']/vt_feature['SNP']
         vt_feature['INDEL_R/INDEL'] = vt_feature['INDEL_R']/vt_feature['INDEL']
         vt_feature['tm_R/tm'] = vt_feature['t_mutation_R']/vt_feature['t_mutation']
+
         vt_feature = vt_feature[[
             'Tumor',
             'SNP',
@@ -172,5 +175,7 @@ class Tagged_Maf(object):
             'tm_R/tm',
         ]]
         merged_feature = pd.merge(vt_feature, vc_feature, how = 'inner', left_on = 'Tumor', right_on = 'Tumor')
-        merged_feature.set_index('Tumor', inplace= True)
+        merged_feature.set_index('Tumor', inplace = True)
+        merged_feature.replace([np.inf, -np.inf], np.nan, inplace = True)
+        merged_feature.fillna(0, inplace = True)
         return merged_feature
